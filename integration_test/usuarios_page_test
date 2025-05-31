@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+
+import 'package:curso_flutter/main.dart';
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('Verifica se a lista de clientes é exibida corretamente', (
+    WidgetTester tester,
+  ) async {
+    // Inicia o app
+    await tester.pumpWidget(const MyApp());
+
+    // Espera a tela inicial carregar
+    await tester.pumpAndSettle();
+
+    // Acessa a tela de clientes - ajuste conforme sua navegação real
+    final botaoClientes = find.text('Lista de Clientes');
+    expect(botaoClientes, findsOneWidget);
+    await tester.tap(botaoClientes);
+    await tester.pump(); // inicia a navegação
+    await tester.pumpAndSettle();
+
+    // Aguarda a lista de clientes carregar
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
+
+    // Verifica se há pelo menos 1 nome de cliente visível
+    expect(find.byType(ListView), findsOneWidget);
+
+    // Você pode ajustar isso conforme clientes reais que vêm da API.
+    expect(find.textContaining('Telefone:'), findsWidgets);
+    expect(find.textContaining('Email:'), findsWidgets);
+
+    // Verifica o título da AppBar
+    expect(find.text('Lista de Clientes'), findsOneWidget);
+  });
+}
